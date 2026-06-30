@@ -1,129 +1,126 @@
 # Trabalho Prático 2 — Gerenciador de Memória Virtual
 
-Este é o projeto-base para implementação de um simulador de gerência de memória virtual.
+## Requisitos
 
-# Execução do Projeto
+Para executar o projeto é necessário:
 
-## 1. Requisitos do Sistema
-
-Para executar o simulador é necessário:
-
-* Sistema operacional Windows 10 ou superior.
-* Python 3 instalado.
-* GCC (compilador C).
-* Make.
-* Git Bash ou terminal compatível.
-
-O projeto foi desenvolvido e testado em ambiente Windows utilizando Git Bash.
+* Windows 10 ou superior.
+* Python 3.
+* w64devkit (GCC + Make).
+* Visual Studio Code (opcional).
 
 ---
 
-## 2. Estrutura do Projeto
+# 1. Instalação do Python
 
-Após extrair o arquivo do projeto, a estrutura de diretórios deve ser semelhante a:
-
-```text
-vm_manager/
-│
-├── data/
-├── include/
-├── src/
-├── Makefile
-└── README
-```
-
-As pastas possuem as seguintes funções:
-
-* data: arquivos utilizados nos testes.
-* include: arquivos de cabeçalho (.h).
-* src: arquivos-fonte em C (.c).
-* Makefile: responsável pela compilação.
-
----
-
-## 3. Instalação do Python
-
-Acessar:
+Baixe e instale:
 
 https://www.python.org/downloads/
 
-Durante a instalação, marcar a opção:
+Durante a instalação marque:
 
-"Add Python to PATH"
+```
+Add Python to PATH
+```
 
-Após a instalação, abrir o terminal e executar:
+Após instalar, abra o Prompt de Comando e execute:
 
 ```bash
 python --version
 ```
 
-Caso seja exibida a versão do Python, a instalação foi concluída corretamente.
+---
+
+# 2. Instalação do w64devkit
+
+Baixe:
+
+https://github.com/skeeto/w64devkit/releases
+
+Extraia, por exemplo:
+
+```text
+C:\w64devkit
+```
 
 ---
 
-## 4. Instalação do GCC e Make
+# 3. Abrindo o terminal do w64devkit
 
-Instalar o ambiente MinGW ou MSYS2 contendo:
+Abra:
+
+```text
+w64devkit.exe
+```
+
+Será aberta uma janela semelhante a:
+
+```text
+C:\w64devkit>
+```
+
+Esse terminal já possui:
 
 * gcc
 * make
+* ferramentas GNU
 
-Após a instalação, verificar:
-
-```bash
-gcc --version
-make --version
-```
-
-Caso as versões sejam exibidas, a instalação foi concluída com sucesso.
+Sem ele, os comandos `gcc` e `make` podem não funcionar.
 
 ---
 
-## 5. Abrindo o Projeto
+# 4. Entrando na pasta do projeto
 
-Extrair o arquivo do projeto em qualquer pasta do computador.
-
-Exemplo:
+Supondo que o projeto esteja em:
 
 ```text
-C:\Projetos\vm_manager
+C:\Users\Marlon\Downloads\PROJETO\vm_manager
 ```
 
-Abrir o Git Bash dentro dessa pasta.
+No terminal do w64devkit execute:
 
-Também é possível abrir a pasta utilizando o Visual Studio Code.
+```bash
+cd /c/Users/Marlon/Downloads/PROJETO/vm_manager
+```
+
+Verifique se os arquivos aparecem:
+
+```bash
+ls
+```
+
+Deve aparecer:
+
+```text
+data
+include
+src
+Makefile
+```
 
 ---
 
-## 6. Geração dos Arquivos de Teste
+# 5. Gerando os arquivos de teste
 
-Entrar na pasta:
+Entre na pasta:
 
 ```bash
 cd data
 ```
 
-Executar:
+Execute:
 
 ```bash
 python generate_data.py
 ```
 
-Ao término serão criados:
+Serão criados:
 
 * BACKING_STORE.bin
 * addresses_random.txt
 * addresses_location.txt
 
-A mensagem:
-
-```text
-Arquivos gerados com sucesso
-```
-
-indica que o processo foi concluído corretamente.
-
-Retornar para a pasta principal:
+Retorne:
 
 ```bash
 cd ..
@@ -131,57 +128,56 @@ cd ..
 
 ---
 
-## 7. Compilação do Projeto
+# 6. Compilando o projeto
 
-Na pasta principal executar:
+Execute:
 
 ```bash
 make
 ```
 
-O compilador GCC será executado automaticamente.
-
-Ao término será criado o executável:
+Será criado:
 
 ```text
 vm.exe
 ```
 
-Caso não ocorram mensagens de erro, a compilação foi realizada com sucesso.
+Se quiser recompilar completamente:
+
+```bash
+make clean
+make
+```
 
 ---
 
-## 8. Execução dos Testes
+# 7. Executando os testes
 
-### Teste com acessos aleatórios
+Teste aleatório:
 
 ```bash
 ./vm < data/addresses_random.txt
 ```
 
-Esse teste simula acessos distribuídos aleatoriamente pela memória virtual.
-
----
-
-### Teste com localidade de referência
+Teste com localidade:
 
 ```bash
 ./vm < data/addresses_location.txt
 ```
 
-Esse teste simula acessos próximos entre si, representando a localidade de referência.
-
 ---
 
-## 9. Resultados Apresentados
+# 8. Resultados
 
-Ao final da execução o programa apresenta:
+O programa exibirá:
 
-* Número total de endereços traduzidos.
-* Quantidade de page faults.
-* Taxa de page faults.
-* Quantidade de acertos do TLB.
-* Taxa de acertos do TLB.
+* endereço lógico;
+* endereço físico;
+* valor armazenado;
+* número de page faults;
+* taxa de page faults;
+* número de TLB hits;
+* taxa de TLB hits.
 
 Exemplo:
 
@@ -192,4 +188,9 @@ Page Fault Rate = 0.116
 TLB Hits = 7925
 TLB Hit Rate = 0.792
 ```
+
 ---
+
+# Observação
+
+O projeto foi desenvolvido e testado utilizando o terminal do w64devkit. Recomenda-se utilizar esse ambiente para garantir compatibilidade com os comandos GCC e Make.
