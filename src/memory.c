@@ -106,8 +106,9 @@ int select_victim_page(void)
                 menor = counter;
             }
         }
-        return victim;
-    }
+       
+    } 
+    return victim;
 }
 
 signed char read_memory(int frame, int offset)
