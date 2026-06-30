@@ -42,7 +42,12 @@ static int find_free_frame(void)
 
 int handle_page_fault(int page)
 {
-    int frame = find_free_frame();
+    int frame;
+
+    if (page < 0 || page >= PAGE_TABLE_SIZE)
+    {
+        frame = find_free_frame();
+    }
 
     if (frame == -1)
     {
@@ -86,22 +91,23 @@ int select_victim_page(void)
 
     for (int i = 0; i < PAGE_TABLE_SIZE; i++)
     {
-
         if (page_table_is_valid(i))
         {
+            unsigned char counter = page_table_get_aging_counter(i);
 
-            unsigned char aging =
-                page_table_get_aging_counter(i);
-
-            if (aging < menor)
+            if (victim == -1)
             {
-                menor = aging;
                 victim = i;
+                menor = counter;
+            }
+            else if (counter < menor)
+            {
+                victim = i;
+                menor = counter;
             }
         }
+        return victim;
     }
-
-    return victim;
 }
 
 signed char read_memory(int frame, int offset)
