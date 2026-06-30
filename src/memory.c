@@ -16,10 +16,12 @@ void memory_init(FILE *backing_store)
 {
     backing = backing_store;
 
-    for (int i = 0; i < NUM_FRAMES; i++) {
+    for (int i = 0; i < NUM_FRAMES; i++)
+    {
         frame_to_page[i] = -1;
 
-        for (int j = 0; j < FRAME_SIZE; j++) {
+        for (int j = 0; j < FRAME_SIZE; j++)
+        {
             physical_memory[i][j] = 0;
         }
     }
@@ -27,8 +29,10 @@ void memory_init(FILE *backing_store)
 
 static int find_free_frame(void)
 {
-    for (int i = 0; i < NUM_FRAMES; i++) {
-        if (frame_to_page[i] == -1) {
+    for (int i = 0; i < NUM_FRAMES; i++)
+    {
+        if (frame_to_page[i] == -1)
+        {
             return i;
         }
     }
@@ -40,7 +44,8 @@ int handle_page_fault(int page)
 {
     int frame = find_free_frame();
 
-    if (frame == -1) {
+    if (frame == -1)
+    {
 
         int victim_page = select_victim_page();
 
@@ -51,7 +56,8 @@ int handle_page_fault(int page)
         tlb_remove(victim_page);
     }
 
-    if (backing == NULL) {
+    if (backing == NULL)
+    {
         fprintf(stderr,
                 "Erro interno: BACKING_STORE nao inicializado.\n");
         exit(1);
@@ -78,14 +84,17 @@ int select_victim_page(void)
     int victim = -1;
     unsigned char menor = 255;
 
-    for (int i = 0; i < PAGE_TABLE_SIZE; i++) {
+    for (int i = 0; i < PAGE_TABLE_SIZE; i++)
+    {
 
-        if (page_table_is_valid(i)) {
+        if (page_table_is_valid(i))
+        {
 
             unsigned char aging =
                 page_table_get_aging_counter(i);
 
-            if (aging < menor) {
+            if (aging < menor)
+            {
                 menor = aging;
                 victim = i;
             }
@@ -97,12 +106,23 @@ int select_victim_page(void)
 
 signed char read_memory(int frame, int offset)
 {
+    if (frame < 0 || frame >= NUM_FRAMES)
+    {
+        return 0;
+    }
+
+    if (offset < 0 || offset >= FRAME_SIZE)
+    {
+        return 0;
+    }
+
     return physical_memory[frame][offset];
 }
 
 int get_page_loaded_in_frame(int frame)
 {
-    if (frame < 0 || frame >= NUM_FRAMES) {
+    if (frame < 0 || frame >= NUM_FRAMES)
+    {
         return -1;
     }
 
