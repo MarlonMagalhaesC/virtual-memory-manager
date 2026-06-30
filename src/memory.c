@@ -42,19 +42,32 @@ static int find_free_frame(void)
 
 int handle_page_fault(int page)
 {
-    int frame;
 
     if (page < 0 || page >= PAGE_TABLE_SIZE)
     {
-        frame = find_free_frame();
+        fprintf(stderr, "Erro: pagina invalida.\n");
+        exit(1);
     }
+
+    int frame = find_free_frame();
 
     if (frame == -1)
     {
-
         int victim_page = select_victim_page();
+        if (victim_page == -1)
+
+        {
+            fprintf(stderr, "Erro: nenhuma pagina vitima encontrada.\n");
+            exit(1);
+        }
 
         frame = page_table_get_frame(victim_page);
+
+        if (frame < 0 || frame >= NUM_FRAMES)
+        {
+            fprintf(stderr, "Erro: frame invalido\n");
+            exit(1);
+        }
 
         page_table_invalidate(victim_page);
 
@@ -68,14 +81,19 @@ int handle_page_fault(int page)
         exit(1);
     }
 
-    fseek(backing,
-          page * PAGE_SIZE,
-          SEEK_SET);
+    if (fseek(backing, page * PAGE_SIZE, SEEK_SET) != 0)
+    {
+        fprintf(stderr, "Erro: falha ao posicionar BACKING_STORE na pagina %d.\n", page);
+        exit(1);
+    }
 
-    fread(physical_memory[frame],
-          sizeof(signed char),
-          PAGE_SIZE,
-          backing);
+    size_t bytes_read = fread(physical_memory[frame], sizeof(signed char), PAGE_SIZE, backing);
+
+    if (bytes_read != PAGE_SIZE)
+    {
+        fprintf(stderr, "Erro: falha ao ler pagina %d do BACKING_STORE.\n", page);
+        exit(1);
+    }
 
     frame_to_page[frame] = page;
 
@@ -106,8 +124,7 @@ int select_victim_page(void)
                 menor = counter;
             }
         }
-       
-    } 
+    }
     return victim;
 }
 
