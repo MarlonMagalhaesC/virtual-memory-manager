@@ -5,9 +5,6 @@ typedef struct {
     int frame;
     int valid;
 
-    /*
-     * Campos usados no LRU aproximado.
-     */
     unsigned char reference_bit;
     unsigned char aging_counter;
 } page_table_entry_t;
