@@ -5,7 +5,8 @@ static page_table_entry_t page_table[PAGE_TABLE_SIZE];
 
 void page_table_init(void)
 {
-    for (int i = 0; i < PAGE_TABLE_SIZE; i++) {
+    for (int i = 0; i < PAGE_TABLE_SIZE; i++)
+    {
         page_table[i].frame = -1;
         page_table[i].valid = 0;
         page_table[i].reference_bit = 0;
@@ -15,39 +16,63 @@ void page_table_init(void)
 
 int page_table_lookup(int page)
 {
-    if (page_table[page].valid) {
+    if (page < 0 || page >= PAGE_TABLE_SIZE)
+        return -1;
+    if (page_table[page].valid == 1)
         return page_table[page].frame;
-    }
-
-    return -1;
+    else
+        return -1;
 }
 
 void page_table_update(int page, int frame)
 {
+    if (page < 0 || page >= PAGE_TABLE_SIZE)
+    {
+        return;
+    }
     page_table[page].frame = frame;
     page_table[page].valid = 1;
-    page_table[page].reference_bit = 0;
+    page_table[page].aging_counter = 0;
+    page_table[page].reference_bit = 1;
 }
 
 void page_table_invalidate(int page)
 {
+     if (page < 0 || page >= PAGE_TABLE_SIZE)
+    {
+        return;
+    }
+
+    page_table[page].frame = -1;
     page_table[page].valid = 0;
+    page_table[page].reference_bit = 0;
+    page_table[page].aging_counter = 0;
 }
 
 void page_table_set_reference(int page)
 {
-    page_table[page].reference_bit = 1;
+     if (page < 0 || page >= PAGE_TABLE_SIZE)
+    {
+        return;
+    }
+    if (page_table[page].valid == 1)
+    {
+        page_table[page].reference_bit = 1;
+    }
 }
 
 void page_table_update_aging(void)
 {
-    for (int i = 0; i < PAGE_TABLE_SIZE; i++) {
+    for (int i = 0; i < PAGE_TABLE_SIZE; i++)
+    {
 
-        if (page_table[i].valid) {
+        if (page_table[i].valid)
+        {
 
             page_table[i].aging_counter >>= 1;
 
-            if (page_table[i].reference_bit) {
+            if (page_table[i].reference_bit)
+            {
                 page_table[i].aging_counter |= 0x80;
             }
 
@@ -58,7 +83,8 @@ void page_table_update_aging(void)
 
 int page_table_get_frame(int page)
 {
-    if (page < 0 || page >= PAGE_TABLE_SIZE) {
+    if (page < 0 || page >= PAGE_TABLE_SIZE)
+    {
         return -1;
     }
 
@@ -67,7 +93,8 @@ int page_table_get_frame(int page)
 
 int page_table_is_valid(int page)
 {
-    if (page < 0 || page >= PAGE_TABLE_SIZE) {
+    if (page < 0 || page >= PAGE_TABLE_SIZE)
+    {
         return 0;
     }
 
@@ -76,7 +103,8 @@ int page_table_is_valid(int page)
 
 unsigned char page_table_get_aging_counter(int page)
 {
-    if (page < 0 || page >= PAGE_TABLE_SIZE) {
+    if (page < 0 || page >= PAGE_TABLE_SIZE)
+    {
         return 0;
     }
 
